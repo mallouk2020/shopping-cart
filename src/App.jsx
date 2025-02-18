@@ -21,21 +21,23 @@ console.log(allItems)
 
   return (
     <>
-      <div className='grid place-items-center py-20 '>
-        <h1 className='text-5xl italic text-gray-500 mb-16'>great shopping cart </h1>
-        <ShoppingCart/>
-        <div className="grid grid-cols-3 place-items-start gap-10">
-
-
-          {allItems.map((item) => {
-            return(<Cartitems key={item.id} item={item}/> )
-            
-          })}
-
-        </div>
-        
+    <div className="grid place-items-center py-20">
+      {/* عنوان الصفحة */}
+      <h1 className="text-4xl sm:text-5xl italic text-gray-500 mb-16">
+        Great Shopping Cart
+      </h1>
+  
+      {/* عربة التسوق */}
+      <ShoppingCart />
+  
+      {/* قائمة المنتجات */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 place-items-start gap-10 w-full px-4">
+        {allItems.map((item) => (
+          <Cartitems key={item.id} item={item} />
+        ))}
       </div>
-    </>
+    </div>
+  </>
   )
 }
 
