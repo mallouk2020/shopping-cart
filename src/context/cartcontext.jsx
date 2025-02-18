@@ -7,18 +7,18 @@ const CartContext = createContext();
 // مقدم السياق (Provider) 
 // eslint-disable-next-line react/prop-types
 export const CartProvider = ({ children }) => {
-  const [allitems, setAllitems] = useState([]);
+  const [allItems, setallItems] = useState([]);
 
   // دالة لتحديث الحالة
   const setItems = () => {
-    setAllitems(allProducts);
+    setallItems(allProducts);
   };
 
 
 
   const addToCart =(item)=>{
 
-    setAllitems((prevItems) => {
+    setallItems((prevItems) => {
       return prevItems.map((prevItem)=>{
         if(prevItem.inCart){
         return prevItem 
@@ -30,7 +30,7 @@ export const CartProvider = ({ children }) => {
 
   
   const removeFromCart =(item)=>{
-    setAllitems((prevItems) => {
+    setallItems((prevItems) => {
       return prevItems.map((prevItem)=>{
        return prevItem.id === item.id ?{...prevItem, inCart:false , quantity:1 }: prevItem
       })
@@ -39,41 +39,19 @@ export const CartProvider = ({ children }) => {
   }
 
 
-  // const removeFromCart = (item) => {
-  //   setAllitems((prevItems) =>
-  //     prevItems.map((prevItem) =>
-  //       prevItem.id === item.id ? { ...prevItem, inCart: false } : prevItem
-  //     )
-  //   );
-  // };
+  const updateQuantity = (cartItem, amount) => { 
+    setallItems((prevItems) => { 
+      return prevItems.map((item) => {
+         return item.id === cartItem.id? {...item, quantity: item.quantity + amount }: item
+        })})
+        }
 
-  // const addToCart = (item) => {
-  //   setAllitems((prevItems) => {
-  //     // البحث عن العنصر في القائمة بناءً على ID
-  //     const isItemInCart = prevItems.some((prevItem) => prevItem.id === item.id);
-  
-  //     if (isItemInCart) {
-  //       // إذا كان العنصر موجودًا بالفعل، ارجع القائمة كما هي
-  //       return prevItems.map((prevItem) =>
-  //         prevItem.id === item.id
-  //           ? { ...prevItem, quantity: (prevItem.quantity || 1) + 1 } // زيادة الكمية إذا كانت موجودة
-  //           : prevItem
-  //       );
-  //     } else {
-  //       // إذا كان العنصر غير موجود، أضفه مع تعيين inCart=true وquantity=1
-  //       return [
-  //         ...prevItems,
-  //         { ...item, inCart: true, quantity: 1 },
-  //       ];
-  //     }
-  //   });
-  // };
 
 
 
 
   return (
-    <CartContext.Provider value={{ allitems, setItems , addToCart , removeFromCart}}>
+    <CartContext.Provider value={{ allItems, setItems , addToCart , removeFromCart ,updateQuantity}}>
       {children}
     </CartContext.Provider>
   );

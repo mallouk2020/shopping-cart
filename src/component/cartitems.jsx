@@ -6,7 +6,7 @@ import CartButtons from "./CartButtons";
 
 
 // eslint-disable-next-line react/prop-types
-const Cartitems = ( {item} ) => {
+const Cartitems = ( {item,fromcart} ) => {
     
     // eslint-disable-next-line react/prop-types
     const { name, price ,imageUrl , id, } = item; 
@@ -25,7 +25,7 @@ const Cartitems = ( {item} ) => {
             <span className=" text-pink-500 text-sm">${price}</span>
          </div>
          {/* {console.log(item.inCart)} */}
-         <CartButtons item={item}/>
+         <CartButtons item={item} fromcart={fromcart}/>
         
       </div>
     );

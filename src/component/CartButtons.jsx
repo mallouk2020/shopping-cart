@@ -5,23 +5,27 @@ import { useCart } from "../context/cartcontext"
 
 
 // eslint-disable-next-line react/prop-types
-export function Btn({removeFromCart ,quantity , item}){
+export function Btn({removeFromCart ,quantity , item ,updateQuantity , fromcart}){
 
 
     return(<div>
-        <div className="flex items-center space-x-2">
+        <div className={` ${fromcart? "flex items-center  space-x-2":"flex items-center space-x-3"} `}>
 {/* زر تقليل الكمية */}
-<button className="border rounded-md w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+<button className={`border rounded-md w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors ${fromcart &&"w-5 h-5"} `}
+onClick={()=>{
+    if (quantity ===1 ){removeFromCart(item)}else
+    updateQuantity(item , -1 )}}>
 -
 </button>
 
 {/* عرض الكمية */}
-<span className="bg-green-100 border text-sm font-medium rounded-full px-3 py-1">
+<span className={`bg-green-100 border text-sm font-medium rounded-full px-3 py-1${fromcart &&"w-5 h-5 px-1 mr-1"} `}>
 {   quantity || 1}
 </span>
 
 {/* زر زيادة الكمية */}
-<button className="border rounded-md w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+<button className={`border rounded-md w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors ${fromcart &&"w-5 h-5"} `}
+onClick={()=>{updateQuantity(item , +1 )}}>
 +
 </button>
 
@@ -29,7 +33,7 @@ export function Btn({removeFromCart ,quantity , item}){
 <span className="text-xs text-gray-500 ml-1">in cart</span>
 
 {/* زر إزالة العنصر من السلة */}
-<button className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-md ml-2 hover:bg-red-600 transition-colors"
+<button className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-md mx-3 hover:bg-red-600 transition-colors "
 onClick={()=>{removeFromCart(item) } }>
 Remove
 </button>
@@ -43,14 +47,14 @@ Remove
 
 
 // eslint-disable-next-line react/prop-types
-const CartButtons = ({item}) => {
+const CartButtons = ({item , fromcart}) => {
 
    
     
 
     // eslint-disable-next-line react/prop-types
     const {inCart,quantity } =item
-    const { addToCart ,removeFromCart  } = useCart()
+    const { addToCart ,removeFromCart,updateQuantity} = useCart()
 
 
     return (
@@ -62,7 +66,7 @@ const CartButtons = ({item}) => {
             hover:bg-zinc-500 transition-colors'
                     onClick={() => {addToCart(item); }} > +add to cart</button>
                     
-            ) : (<Btn removeFromCart={removeFromCart }item={item} quantity={quantity}/>)}
+            ) : (<Btn removeFromCart={removeFromCart }item={item} quantity={quantity}  updateQuantity={updateQuantity} fromcart={fromcart}/>)}
             </div>
         </div>
     )
