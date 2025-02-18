@@ -21,7 +21,7 @@ export const hoodies = [
 
     price: 34.99,
     uniqueCode: "H002",
-    quantity: 1,
+    quantity: 5,
     inCart: false,
   },
   {

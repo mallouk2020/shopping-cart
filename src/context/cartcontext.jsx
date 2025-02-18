@@ -28,6 +28,25 @@ export const CartProvider = ({ children }) => {
     })
   }
 
+  
+  const removeFromCart =(item)=>{
+    setAllitems((prevItems) => {
+      return prevItems.map((prevItem)=>{
+       return prevItem.id === item.id ?{...prevItem, inCart:false , quantity:1 }: prevItem
+      })
+    })
+
+  }
+
+
+  // const removeFromCart = (item) => {
+  //   setAllitems((prevItems) =>
+  //     prevItems.map((prevItem) =>
+  //       prevItem.id === item.id ? { ...prevItem, inCart: false } : prevItem
+  //     )
+  //   );
+  // };
+
   // const addToCart = (item) => {
   //   setAllitems((prevItems) => {
   //     // البحث عن العنصر في القائمة بناءً على ID
@@ -54,7 +73,7 @@ export const CartProvider = ({ children }) => {
 
 
   return (
-    <CartContext.Provider value={{ allitems, setItems , addToCart}}>
+    <CartContext.Provider value={{ allitems, setItems , addToCart , removeFromCart}}>
       {children}
     </CartContext.Provider>
   );
