@@ -11,7 +11,7 @@ const {allItems , setItems }= useCart()
 
 useEffect(()=>{
   setItems()
-},[setItems])
+},[])
 
 
 useEffect(()=>{

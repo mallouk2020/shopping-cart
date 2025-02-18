@@ -1,67 +1,104 @@
-// import React from 'react'
+import { useEffect, useState } from "react";
+import { useCart } from "../context/cartcontext";
+import Cartitems from "./cartitems";
 
-import { useEffect, useState } from "react"
-import { useCart } from "../context/cartcontext"
-import Cartitems from "./cartitems"
 function ShoppingCart() {
-    const [isOpen, setisOpen ] = useState(false)
-    const [cartItems, setcartItems ] = useState([])
-    const [totalprice, settotalprice]= useState(0)
+  const [isOpen, setIsOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const { allItems } = useCart();
 
-    const {allItems}= useCart()
+  useEffect(() => {
+    // التحقق من أن allItems معرفة وليست فارغة
+    if (!Array.isArray(allItems)) {
+      console.error("allItems is not defined or not an array");
+      return;
+    }
 
-    useEffect(()=>{
-        const incartitems = allItems.filter((item)=>item.inCart)
-        setcartItems(incartitems)
-        console.log("updeted",incartitems )
+    // تحديث العناصر الموجودة في السلة
+    const inCartItems = allItems.filter((item) => item.inCart);
+    setCartItems(inCartItems);
 
+    // حساب السعر الإجمالي
+    const price = inCartItems.reduce((accumulator, item) => {
+      return accumulator + (item.price * (item.quantity || 1));
+    }, 0);
 
-        const price = incartitems.reduce((accumulator, item) =>{
-            return(accumulator += item.price * item.quantity)
-            
-        },0)
-        const roundedPrice = parseFloat(price.toFixed(2));
-        settotalprice(roundedPrice);
-    },[allItems])
+    // تقريب السعر الإجمالي إلى منزلتين عشريتين
+    const roundedPrice = parseFloat(price.toFixed(2));
+    setTotalPrice(roundedPrice);
 
+    console.log("Updated cart items:", inCartItems);
+  }, [allItems]);
 
+  return (
+    <>
+      {cartItems.length > 0 && (
+        <div
+          className={`fixed right-0 top-0 z-30 h-screen bg-white/50 backdrop-blur-md border-l-4 rounded-tl-lg transition-all duration-300 ${
+            isOpen ? "w-[300px]" : "w-[0px]"
+          }`}
+        >
+          {/* Header */}
+          <div className="relative w-full h-16 bg-white border rounded-lg grid place-items-center">
+            <h1 className="text-xl text-gray-600">Shopping Cart</h1>
 
+            {/* زر إغلاق السلة */}
+            <button
+              className={`absolute right-3 z-20 w-9 h-9 bg-yellow-400 border-2 rounded-full grid place-items-center hover:bg-yellow-500 ${
+                !isOpen && "hidden"
+              }`}
+              onClick={() => setIsOpen(false)}
+            >
+              <img
+                width={20}
+                src="https://cdn-icons-png.flaticon.com/128/1828/1828744.png"
+                alt="close"
+              />
+            </button>
 
-    return (
-        <>{cartItems.length> 0 && 
-        <div className={`w-[300px] h-screen bg-white/50 backdrop-blur-md fixed right-0 top-0 z-30 border-l-4 rounded-tl-lg ${isOpen ? 'w-[300px]' : 'w-[0px]'}`}>
-            <div className='w-full h-16 bg-white  absolute left-0 top-0 z-10 grid place-items-center border rounded-lg'>
-                <h1 className="text-xl text-gray-600"> shopping cart </h1>
-
-                <button className={`w-9 h-9 bg-yellow-400  absolute right-3 z-20 grid border-2 rounded-full place-items-center hover:bg-yellow-500  ${!isOpen && 'hidden '}`}
-                    onClick={() =>{ setisOpen(false)} }>
-
-                    <img width={20} src="https://cdn-icons-png.flaticon.com/128/1828/1828744.png" alt="cart" />
-                </button>
-
-                <div>
-                    <button className={`w-9 h-9 bg-yellow-400  absolute -left-14 top-3 z-20 grid border-2 rounded-full place-items-center hover:bg-yellow-500 ${isOpen && 'hidden '}`}
-                    onClick={() =>{ setisOpen(true)} }>
-                        <img width={20} src="https://cdn-icons-png.flaticon.com/128/5337/5337564.png" alt="" />
-                    </button>
-                    <span className={`w-5 h-5 bg-pink-700 absolute -left-9 bottom-9 z-30  text-sm rounded-full text-white border-gray-400 grid place-items-center ${isOpen && 'hidden '}`}>{cartItems.length==9 ?"9":cartItems.length}</span>
-                </div>
-
-
+            {/* زر فتح السلة */}
+            <div>
+              <button
+                className={`absolute -left-14 top-3 z-20 w-9 h-9 bg-yellow-400 border-2 rounded-full grid place-items-center hover:bg-yellow-500 ${
+                  isOpen && "hidden"
+                }`}
+                onClick={() => setIsOpen(true)}
+              >
+                <img
+                  width={20}
+                  src="https://cdn-icons-png.flaticon.com/128/5337/5337564.png"
+                  alt="open"
+                />
+              </button>
+              <span
+                className={`absolute -left-9 bottom-9 z-30 w-5 h-5 bg-pink-700 text-sm rounded-full text-white grid place-items-center ${
+                  isOpen && "hidden"
+                }`}
+              >
+                {cartItems.length > 9 ? "9+" : cartItems.length}
+              </span>
             </div>
-            <div className="h-screen flex flex-col gap-y-3  overflow-y-scroll px-5 pb-24 pt-20">
-                {cartItems?.map((item)=>{return <Cartitems  fromcart={true} item={item} key={item.id}/> })}</div>
+          </div>
 
+          {/* قائمة العناصر في السلة */}
+          <div className="h-screen flex flex-col gap-y-3 overflow-y-scroll px-5 pb-24 pt-20">
+            {cartItems.map((item) => (
+              <Cartitems key={item.id} item={item} fromcart={true} />
+            ))}
+          </div>
 
-            <div className="w-full h-20 bg-white absolute bottom-0 left-0 z-10 grid place-items-center border rounded-lg">
-                <h1 className=" text-xl text-gray-700">total price:{totalprice}</h1>
-                <button className=" w-auto h-7 text-white bg-blue-400  border rounded-lg px-3  hover:bg-blue-500">buy now</button>
-            </div>
-
-        </div>}
-        
-        </>
-    )
+          {/* إجمالي السعر وزر الشراء */}
+          <div className="absolute bottom-0 left-0 w-full h-20 bg-white border rounded-lg grid place-items-center">
+            <h1 className="text-xl text-gray-700">Total Price: ${totalPrice}</h1>
+            <button className="w-auto h-7 text-white bg-blue-400 border rounded-lg px-3 hover:bg-blue-500">
+              Buy Now
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
 
-export default ShoppingCart
+export default ShoppingCart;
