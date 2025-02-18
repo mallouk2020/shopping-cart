@@ -58,6 +58,7 @@ export const CartProvider = ({ children }) => {
 };
 
 // هوك لاستهلاك السياق
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
   return useContext(CartContext);
 };
